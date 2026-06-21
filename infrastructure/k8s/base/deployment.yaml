@@ -1,0 +1,220 @@
+# ECCRP Kubernetes Base Manifests
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eccrp
+  labels:
+    app.kubernetes.io/name: eccrp
+
+---
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eccrp-backend
+  namespace: eccrp
+  labels:
+    app: eccrp-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: eccrp-backend
+  template:
+    metadata:
+      labels:
+        app: eccrp-backend
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/eccrp/backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eccrp-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eccrp-secrets
+                  key: redis-url
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: eccrp-secrets
+                  key: jwt-secret-key
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: eccrp-secrets
+                  key: openai-api-key
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: eccrp-backend
+  namespace: eccrp
+spec:
+  selector:
+    app: eccrp-backend
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP
+
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eccrp-frontend
+  namespace: eccrp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eccrp-frontend
+  template:
+    metadata:
+      labels:
+        app: eccrp-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/eccrp/frontend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: "https://api.eccrp.in/api/v1"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: eccrp-frontend
+  namespace: eccrp
+spec:
+  selector:
+    app: eccrp-frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eccrp-ingress
+  namespace: eccrp
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  tls:
+    - hosts:
+        - eccrp.in
+        - api.eccrp.in
+      secretName: eccrp-tls
+  rules:
+    - host: eccrp.in
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eccrp-frontend
+                port:
+                  number: 3000
+    - host: api.eccrp.in
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eccrp-backend
+                port:
+                  number: 8000
+
+---
+# HPA - Backend
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: eccrp-backend-hpa
+  namespace: eccrp
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: eccrp-backend
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+# Secrets (values filled by CI/CD or sealed-secrets)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: eccrp-secrets
+  namespace: eccrp
+type: Opaque
+stringData:
+  database-url: "postgresql+asyncpg://eccrp:CHANGE_ME@postgres:5432/eccrp"
+  redis-url: "redis://redis:6379/0"
+  jwt-secret-key: "CHANGE_ME_JWT_SECRET"
+  openai-api-key: "CHANGE_ME_OPENAI_KEY"

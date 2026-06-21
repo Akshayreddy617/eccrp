@@ -1,0 +1,62 @@
+# ECCRP .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Environment files - NEVER commit secrets
+.env
+.env.local
+.env.production
+.env.staging
+backend/.env
+
+# Node
+node_modules/
+.next/
+out/
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Docker
+*.tar
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Test artifacts
+test_results/
+playwright-report/
+
+# Uploads (local dev)
+uploads/
+
+# Alembic (don't track auto-generated)
+# Keep migrations tracked
+
+venv312/
+backend/venv312/
