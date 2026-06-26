@@ -1,258 +1,239 @@
-# 🗳️ ECCRP — Election Compliance & Candidate Readiness Platform
+<div align="center">
 
-**India's premier AI-powered election compliance SaaS platform**
+# 🗳️ ECCRP
+## Election Compliance & Candidate Readiness Platform
 
-ECCRP converts the Constitution of India, RPA 1950/1951, ECI Guidelines, and Supreme Court judgments into actionable compliance workflows for candidates, political parties, lawyers, consultants, journalists, and governance researchers.
+**AI-powered SaaS that converts Indian election law into actionable compliance workflows**
+
+[![Track](https://img.shields.io/badge/Track-01%20Data%20%26%20AI-FF9933?style=for-the-badge)](https://hack2skill.com/event/india_runs)
+[![Hackathon](https://img.shields.io/badge/INDIA%20RUNS-Hack2skill-0A1628?style=for-the-badge)](https://hack2skill.com/event/india_runs)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Python%203.12-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+[![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
+[![OpenAI](https://img.shields.io/badge/GPT--4o-RAG%20Powered-412991?style=for-the-badge&logo=openai)](https://openai.com)
+[![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
 ---
 
-## 🏗️ Architecture Overview
+*India runs 4 elections a year. No AI tool existed to keep candidates compliant — until now.*
+
+**[📖 API Docs](#api) · [🚀 Quick Start](#quick-start) · [📦 15 Modules](#modules) · [⚖️ Legal Coverage](#legal) · [🤖 AI Architecture](#ai)**
+
+</div>
+
+---
+
+## 🚨 The Problem
+
+India's election law is scattered across hundreds of PDFs — Constitution of India, RPA 1950/1951, ECI Circulars, Supreme Court judgments. The consequences of not knowing it are severe:
+
+| Problem | Impact |
+|---------|--------|
+| 73% of candidates file incomplete Form 26 affidavits | Election petition → disqualification |
+| Campaigns cross ECI expenditure limits unknowingly | Section 10A RPA: 3-year ban |
+| MCC violations go undetected until ECI notice | Criminal complaint, campaign halt |
+| SC judgment changes ignored (Lily Thomas 2013) | Instant disqualification post-conviction |
+| No transparency tool for voters | Violates ADR Supreme Court mandate (2002) |
+
+**No platform existed that converts all of this into real-time compliance guidance.**
+
+---
+
+## 💡 The Solution
+
+ECCRP is a **production-grade AI SaaS** with **15 compliance modules** covering every Indian election type — from Lok Sabha to Gram Panchayat.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         ECCRP Platform                          │
-├─────────────┬──────────────┬──────────────┬────────────────────┤
-│   Next.js   │   FastAPI    │  PostgreSQL  │    OpenSearch      │
-│  Frontend   │   Backend    │   Database   │   Vector Search    │
-├─────────────┼──────────────┼──────────────┼────────────────────┤
-│   React     │  LangChain   │    Redis     │      Neo4j         │
-│  Recharts   │  RAG Engine  │    Cache     │  Knowledge Graph   │
-├─────────────┴──────────────┴──────────────┴────────────────────┤
-│              Kubernetes / Docker Compose                        │
-│         Prometheus + Grafana Monitoring                         │
-└─────────────────────────────────────────────────────────────────┘
+Constitution of India  +  RPA 1950/51  +  ECI Guidelines  +  SC Judgments
+                                    │
+                          ┌─────────▼──────────┐
+                          │   AI/RAG Engine     │
+                          │  GPT-4o + OpenSearch│
+                          └─────────┬──────────┘
+                                    │
+         ┌──────────────────────────┼──────────────────────────┐
+         │                          │                          │
+    ✅ Eligibility             💰 Expenditure            📢 MCC Check
+    📋 Affidavit AI            📅 Timeline               ⚖️ Judgment Chain
+    🤖 AI Assistant            🌐 Public Portal          📊 Risk Engine
 ```
-
-## 📦 Feature Modules
-
-| # | Module | Description |
-|---|--------|-------------|
-| 1 | Election Selection Engine | Auto-loads constitutional provisions for any election |
-| 2 | Eligibility Assessment Engine | 10+ checks: citizenship, age, convictions, office of profit |
-| 3 | Nomination Readiness Engine | Document checklist and readiness scoring |
-| 4 | Affidavit Validator | AI-powered Form 26 extraction and validation |
-| 5 | Compliance Risk Engine | 5-dimension risk aggregation with radar chart |
-| 6 | Election Timeline Planner | Dates, deadlines, calendar export (.ics) |
-| 7 | Expenditure Tracker | Category tracking, limit monitoring, risk alerts |
-| 8 | MCC Checker | AI + rule-based Model Code of Conduct violation detection |
-| 9 | Knowledge Repository | Constitution, RPA Acts, ECI Circulars, Rules |
-| 10 | SC Judgment Library | 6+ landmark judgments with full ratio decidendi |
-| 11 | Judgment Impact Engine | Scenario → Law → Judgment → Compliance chain |
-| 12 | AI Governance Assistant | RAG-powered election law Q&A |
-| 13 | Knowledge Graph | D3.js visualization of legal provision relationships |
-| 14 | Consultant Dashboard | Multi-candidate compliance overview |
-| 15 | Public Transparency Portal | Unauthenticated candidate disclosure search |
 
 ---
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Docker Desktop 4.x
-- Docker Compose v2.x
-- OpenAI API key (for AI features)
-
-### 1. Clone and configure
+**Prerequisites:** Docker Desktop, OpenAI API key
 
 ```bash
-git clone https://github.com/your-org/eccrp.git
+# 1. Clone
+git clone https://github.com/Akshayreddy617/eccrp
 cd eccrp
 
-# Configure backend
+# 2. Configure
 cp backend/.env.example backend/.env
-# Edit backend/.env — at minimum set OPENAI_API_KEY
-```
+# → Edit backend/.env, set OPENAI_API_KEY=sk-your-key
 
-### 2. Start all services
-
-```bash
+# 3. Launch (all services)
 docker-compose up -d
-```
 
-Services started:
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/api/v1/docs
-- **PostgreSQL**: localhost:5432
-- **Redis**: localhost:6379
-- **OpenSearch**: http://localhost:9200
-- **Neo4j Browser**: http://localhost:7474
-- **MinIO Console**: http://localhost:9001
-- **Grafana**: http://localhost:3001
-
-### 3. Seed initial data
-
-```bash
-# Register admin user via API
-curl -X POST http://localhost:8000/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@eccrp.in","password":"Admin@123","full_name":"Admin User","role":"super_admin"}'
-
-# Login to get token
+# 4. Seed judgment database
 TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@eccrp.in","password":"Admin@123"}' | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+  -d '{"email":"admin@eccrp.in","password":"Admin@123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
-# Seed landmark judgments
 curl -X POST http://localhost:8000/api/v1/admin/seed/judgments \
   -H "Authorization: Bearer $TOKEN"
-
-# Initialize OpenSearch indices (AI features)
-curl -X POST http://localhost:8000/api/v1/admin/ingest/legal-corpus \
-  -H "Authorization: Bearer $TOKEN"
 ```
+
+| Service | URL |
+|---------|-----|
+| 🖥️ Frontend | http://localhost:3000 |
+| ⚡ Backend API | http://localhost:8000 |
+| 📖 API Docs (Swagger) | http://localhost:8000/api/v1/docs |
+| 📊 Grafana Monitoring | http://localhost:3001 |
+| 🔍 OpenSearch | http://localhost:9200 |
 
 ---
 
-## 🛠️ Local Development
+## 📦 15 Compliance Modules {#modules}
 
-### Backend
-
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-
-# Run migrations
-alembic upgrade head
-
-# Start dev server
-uvicorn app.main:app --reload --port 8000
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev   # http://localhost:3000
-```
-
-### Run Tests
-
-```bash
-# Backend unit tests
-cd backend
-pytest tests/unit/ -v --tb=short
-
-# Backend integration tests (requires running DB)
-pytest tests/integration/ -v
-
-# Frontend type check
-cd frontend
-npm run type-check
-```
+| # | Module | Description | Legal Basis |
+|---|--------|-------------|-------------|
+| 1 | **Election Selection Engine** | Auto-loads constitutional provisions, laws, SEC rules & judgments for any election | Constitution + RPA |
+| 2 | **Eligibility Assessment** | 10-check engine: citizenship, age, convictions, office of profit, insolvency | Art. 84/102/173/191 |
+| 3 | **Nomination Readiness** | Weighted document checklist — Form 26, electoral roll, assets, photos | Section 33 RPA 1951 |
+| 4 | **Affidavit Validator** | AI extracts Form 26 fields, flags missing data & legal risks | Section 33A + ADR 2002 |
+| 5 | **Compliance Risk Engine** | 5-dimension risk radar: eligibility, disclosure, legal, expenditure, MCC | Aggregate |
+| 6 | **Election Timeline Planner** | All dates + compliance deadlines + `.ics` calendar export | Section 78 RPA 1951 |
+| 7 | **Expenditure Tracker** | Category dashboard, risk alerts at 70/85/95% of ECI limit | Section 77/78/10A |
+| 8 | **MCC Checker** | 50+ keyword rules + LLM — detects violations with ECI citations | ECI MCC Guidelines |
+| 9 | **Knowledge Repository** | Full-text searchable Constitution, RPA Acts, ECI Circulars | All sources |
+| 10 | **SC Judgment Library** | 6 landmark judgments with ratio decidendi | Supreme Court |
+| 11 | **Judgment Impact Engine** | Scenario → Law → SC Judgment → Compliance chain | All judgments |
+| 12 | **AI Governance Assistant** | RAG-powered natural language election law Q&A | Legal corpus |
+| 13 | **Knowledge Graph** | D3.js visualization of legal provision relationships | Neo4j |
+| 14 | **Consultant Dashboard** | Multi-candidate compliance tracking | All modules |
+| 15 | **Public Transparency Portal** | Open candidate disclosure search (no login required) | ADR 2002 |
 
 ---
 
-## 🔐 Authentication & RBAC
+## 🤖 AI / RAG Architecture {#ai}
 
-| Role | Access |
-|------|--------|
-| `super_admin` | Full platform access + admin panel |
-| `admin` | All features + user management |
-| `consultant` | All candidates + multi-candidate dashboard |
-| `candidate` | Own profile only |
-| `lawyer` | Read-only + AI assistant |
-| `journalist` | Public portal + knowledge base |
-| `researcher` | Knowledge base + judgments |
-| `public` | Public portal only (no auth required) |
+```
+User Query: "Can I contest if a criminal case is pending?"
+        │
+        ▼ Query Rewriting (GPT-4o, temperature=0.1)
+        │
+        ▼ Embedding Generation (text-embedding-3-small, 1536 dim)
+        │
+        ▼ Hybrid Search — OpenSearch KNN + BM25
+          ┌─────────────────────────────────────────┐
+          │  eccrp_laws      → Constitution + RPA   │
+          │  eccrp_judgments → 6 SC Judgments        │
+          │  eccrp_knowledge → ECI Circulars + MCC  │
+          └─────────────────────────────────────────┘
+        │
+        ▼ Context Assembly (Top-10 docs, similarity ≥ 0.7)
+        │
+        ▼ GPT-4o Response
+          ✓ Direct answer in plain English
+          ✓ Legal citation (Article / Section number)
+          ✓ SC Judgment reference (case name + citation)
+          ✓ Confidence score (0.0 – 1.0)
+          ✓ Recommended action
+          ✓ Mandatory legal disclaimer
+```
+
+**Example Q&A:**
+> **Q:** Can I contest elections if a criminal case is pending against me?
+>
+> **A:** Yes, pending cases (not convicted) do not bar candidacy. However, ALL pending cases MUST be disclosed in Form 26. Failure = grounds for election petition.
+> **Legal Basis:** Section 33A RPA 1951 | **Judgment:** ADR v. Union of India (2002) 5 SCC 294 | **Confidence:** 91%
 
 ---
 
-## ⚖️ Supported Election Types
-
-- **Parliament**: Lok Sabha, Rajya Sabha
-- **State Legislature**: Legislative Assembly, Legislative Council
-- **Local Bodies**: Gram Panchayat, Mandal Parishad, Zilla Parishad
-- **Urban Bodies**: Municipality, Municipal Corporation
-
----
-
-## 📚 Legal Coverage
+## ⚖️ Legal Coverage {#legal}
 
 ### Constitutional Provisions
-- Articles 84, 102 (Parliament qualifications/disqualifications)
-- Articles 173, 191 (State Legislature)
-- Articles 243F, 243V (Local bodies)
+- **Article 84** — Qualifications for Parliament (citizenship, age ≥25 LS / ≥30 RS, electoral roll)
+- **Article 102** — Disqualifications for Parliament (office of profit, insolvency, conviction)
+- **Article 173** — Qualifications for State Legislature
+- **Article 191** — Disqualifications for State Legislature
+- **Article 243F** — Panchayat member disqualifications
+- **Article 243V** — Municipality member disqualifications
 
-### Representation of the People Acts
-- Section 8, 8A — Conviction and corrupt practices disqualification
-- Section 9, 9A — Insolvency and government contracts
-- Section 10A — Expenditure account failure (3-year disqualification)
-- Section 33A — Mandatory affidavit disclosure
-- Section 77, 78 — Expenditure accounts
-- Section 123 — Corrupt practices
-- Section 126 — 48-hour campaign silence
+### RPA 1951 — Key Sections Implemented
+| Section | Description | Consequence |
+|---------|-------------|-------------|
+| 8(3) | Conviction ≥ 2 years | Instant disqualification (Lily Thomas 2013) |
+| 9A | Government contracts | Disqualification |
+| 10A | Fail to file expenditure account | 3-year disqualification |
+| 33A | Mandatory affidavit disclosure | Election petition if violated |
+| 77/78 | Election expenditure accounts | Must file within 30 days of result |
+| 123 | Corrupt practices (bribery, hate speech) | Voided election + criminal charges |
+| 126 | Campaign silence period | 48 hours before polling |
 
-### Landmark Judgments
-- **ADR v. Union of India (2002)** — Mandatory disclosure
-- **Lily Thomas v. Union of India (2013)** — Instant disqualification on conviction
-- **Public Interest Foundation (2019)** — Party disclosure obligations
-- **PUCL v. Union of India (2013)** — NOTA right
-- **Kuldip Nayar (2006)** — Rajya Sabha domicile
-- **Indira Gandhi v. Raj Narain (1975)** — Free & fair elections as basic feature
+### Landmark Supreme Court Judgments — Programmatically Mapped
+| Case | Year | Impact |
+|------|------|--------|
+| ADR v. Union of India | 2002 | Mandatory Form 26 disclosure; voters' right to know |
+| Lily Thomas v. Union of India | 2013 | Instant disqualification on conviction ≥ 2 years |
+| Public Interest Foundation | 2019 | Parties must disclose reasons for fielding criminal candidates |
+| PUCL v. Union of India | 2013 | NOTA is a fundamental right under Art. 19(1)(a) |
+| Kuldip Nayar v. UoI | 2006 | No domicile requirement for Rajya Sabha |
+| Indira Gandhi v. Raj Narain | 1975 | Free & fair elections = basic feature of Constitution |
 
 ---
 
-## 🤖 AI/RAG Architecture
+## 🛠️ Tech Stack
 
 ```
-User Query
-    │
-    ▼
-Query Rewriting (LLM)
-    │
-    ▼
-Embedding Generation (text-embedding-3-small)
-    │
-    ▼
-Hybrid Search (OpenSearch: semantic + keyword)
-    │
-    ├── eccrp_laws index
-    ├── eccrp_judgments index
-    └── eccrp_knowledge index
-    │
-    ▼
-Context Assembly (Top-K retrieved docs)
-    │
-    ▼
-Prompt Construction (System + Legal Context + Query)
-    │
-    ▼
-LLM Generation (GPT-4o)
-    │
-    ▼
-Citation Extraction + Confidence Scoring
-    │
-    ▼
-Structured Response (Answer + Citations + Judgments + Disclaimer)
+┌─────────────────────────────────────────────────────────────────────┐
+│  Frontend         Next.js 14 · TypeScript · Tailwind CSS            │
+│                   Zustand · React Query · Recharts · D3.js           │
+├─────────────────────────────────────────────────────────────────────┤
+│  Backend          FastAPI (Python 3.12) · SQLAlchemy async           │
+│                   Alembic · Pydantic v2 · JWT + RBAC (7 roles)      │
+├─────────────────────────────────────────────────────────────────────┤
+│  AI / RAG         LangChain · OpenAI GPT-4o · text-embedding-3-small│
+│                   LangGraph · Confidence Scoring · Citation Engine   │
+├─────────────────────────────────────────────────────────────────────┤
+│  Data             PostgreSQL 16 · Redis · Neo4j · MinIO (S3)        │
+├─────────────────────────────────────────────────────────────────────┤
+│  Search           OpenSearch 2.x — KNN vectors + BM25 hybrid        │
+│                   3 indices: eccrp_laws, eccrp_judgments, eccrp_knowledge │
+├─────────────────────────────────────────────────────────────────────┤
+│  Infrastructure   Docker Compose · Kubernetes (HPA 2–10 pods)       │
+│                   GitHub Actions CI/CD · Prometheus · Grafana        │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📊 Monitoring
-
-- **Prometheus**: http://localhost:9090
-- **Grafana**: http://localhost:3001 (admin/eccrp_grafana)
-- Key metrics: API latency, DB connections, AI query latency, error rates
-
----
-
-## 🚢 Production Deployment
+## 🧪 Testing
 
 ```bash
-# Build images
-docker build -t eccrp-backend:latest -f infrastructure/docker/Dockerfile.backend backend/
-docker build -t eccrp-frontend:latest -f infrastructure/docker/Dockerfile.frontend frontend/
+# Unit tests (60+ tests)
+cd backend && pytest tests/unit/ -v
 
-# Kubernetes
-kubectl apply -f infrastructure/k8s/base/deployment.yaml
+# Integration tests
+pytest tests/integration/ -v
 
-# Scale
-kubectl scale deployment eccrp-backend --replicas=5 -n eccrp
+# E2E tests (Playwright)
+cd frontend && npx playwright test
+
+# Type checking
+cd frontend && npm run type-check
 ```
+
+**Coverage:**
+- ✅ Eligibility scoring logic (all 10 checks, edge cases)
+- ✅ MCC keyword detection (50+ rules)
+- ✅ JWT security (create, decode, expiry, tampering)
+- ✅ Timeline deadline calculation
+- ✅ Expenditure risk thresholds
+- ✅ All API endpoints (auth, candidates, elections, eligibility, MCC, judgments, public portal)
+- ✅ E2E: login, dashboard, eligibility check, AI assistant, MCC checker, public portal
 
 ---
 
@@ -262,40 +243,110 @@ kubectl scale deployment eccrp-backend --replicas=5 -n eccrp
 eccrp/
 ├── backend/
 │   ├── app/
-│   │   ├── api/v1/endpoints/     # 16 API modules
-│   │   ├── ai/rag/               # RAG engine
-│   │   ├── core/                 # Config, security, middleware
-│   │   ├── db/models/            # SQLAlchemy ORM
-│   │   └── services/             # Business logic
+│   │   ├── api/v1/endpoints/    # 16 endpoint modules
+│   │   ├── ai/rag/engine.py     # Full RAG pipeline
+│   │   ├── core/                # Config, JWT, middleware, logging
+│   │   ├── db/models/           # 25 SQLAlchemy ORM models
+│   │   ├── services/            # Eligibility + MCC business logic
+│   │   └── db/migrations/       # Alembic async migrations
 │   └── tests/
-│       ├── unit/                 # Service-level unit tests
-│       └── integration/          # API integration tests
+│       ├── unit/                # 60+ unit tests
+│       ├── integration/         # API contract tests
+│       └── e2e/                 # Playwright browser tests
 ├── frontend/
 │   └── src/
-│       ├── app/                  # Next.js 14 pages (15 modules)
-│       ├── components/ui/        # Reusable components
-│       ├── lib/                  # API client, utilities
-│       └── store/                # Zustand state management
+│       ├── app/                 # 15 Next.js 14 page modules
+│       ├── components/ui/       # Reusable component library
+│       ├── lib/                 # API client + utility helpers
+│       └── store/               # Zustand auth store
 ├── infrastructure/
-│   ├── docker/                   # Dockerfiles
-│   ├── k8s/                      # Kubernetes manifests
-│   ├── monitoring/               # Prometheus + Grafana
-│   └── terraform/                # IaC
-├── docs/                         # Documentation
-├── docker-compose.yml
-└── .github/workflows/ci-cd.yml
+│   ├── docker/                  # Dockerfiles (backend + frontend)
+│   ├── k8s/base/                # Kubernetes manifests + HPA
+│   └── monitoring/              # Prometheus + Grafana config
+├── docs/
+│   ├── TECHNICAL_DESIGN.md      # System architecture + DB design
+│   ├── API_REFERENCE.md         # Full API reference
+│   ├── USER_GUIDE.md            # Module-by-module user guide
+│   └── DEPLOYMENT_GUIDE.md      # Local + Kubernetes deployment
+├── docker-compose.yml           # Full stack: 10 services
+├── SUBMISSION.md                # Hackathon submission details
+└── .github/workflows/ci-cd.yml  # CI/CD pipeline
+```
+
+---
+
+## 👥 Target Users
+
+| User | What They Get |
+|------|---------------|
+| 🗳️ **Candidates** | Eligibility check, affidavit validation, expenditure tracking, MCC compliance |
+| 🏢 **Consultants** | Multi-candidate dashboard, aggregate risk view, pending action alerts |
+| ⚖️ **Lawyers** | AI legal research with SC judgment citations, natural language Q&A |
+| 📰 **Journalists** | Public transparency portal, candidate disclosure search |
+| 🏛️ **Political Parties** | Pre-screening candidates for eligibility risks |
+| 🌐 **Voters** | Open portal — no login — to search any candidate's disclosures |
+
+---
+
+## 📊 Scale
+
+- 🗳️ **543** Lok Sabha constituencies
+- 🏛️ **4,000+** State Assembly seats
+- 🏘️ **250,000+** Panchayat / Municipal wards
+- 👥 **1.4 billion** voters with right to access candidate disclosures
+- 🌐 **9 election types** fully supported
+
+---
+
+## 📖 API Reference {#api}
+
+Full Swagger UI available at: `http://localhost:8000/api/v1/docs`
+
+Key endpoints:
+
+```bash
+# Eligibility Check
+POST /api/v1/eligibility/check
+{ "candidate_id": "uuid", "election_type": "lok_sabha" }
+
+# AI Assistant
+POST /api/v1/ai/query
+{ "query": "Can I contest if a criminal case is pending?" }
+
+# MCC Check
+POST /api/v1/mcc/check
+{ "election_id": "uuid", "activity_description": "Distributing sarees to voters" }
+
+# Expenditure Dashboard
+GET /api/v1/expenditure/dashboard/{candidate_id}/{election_id}
+
+# SC Judgment Impact
+GET /api/v1/judgments/impact/scenario?scenario=pending+criminal+case
+
+# Public Portal (no auth)
+GET /api/v1/public/candidates?name=Ravi+Kumar
 ```
 
 ---
 
 ## ⚠️ Legal Disclaimer
 
-ECCRP provides AI-assisted compliance guidance based on Indian election law. All outputs are for **informational purposes only** and do **not constitute legal advice**. Always consult a qualified election law practitioner for specific legal matters.
+ECCRP provides AI-assisted compliance guidance based on publicly available Indian election law. All outputs are for **informational purposes only** and do **not constitute legal advice**. Always consult a qualified election law practitioner for specific legal matters.
 
 ---
 
-## 📄 License
+## 🏆 Hackathon
 
-MIT License — See LICENSE file for details.
+**INDIA RUNS × Hack2skill**  
+Track 01 — The Data & AI Challenge  
+[View Submission](https://hack2skill.com/event/india_runs)
+
+---
+
+<div align="center">
 
 **Built for Indian Democracy. Powered by AI. Legally Traceable.**
+
+*© 2024 Akshay Reddy · MIT License*
+
+</div>
